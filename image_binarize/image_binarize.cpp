@@ -1,12 +1,9 @@
 ﻿// image_binarize.cpp : 此檔案包含 'main' 函式。程式會於該處開始執行及結束執行。
 // this code is for image segmentation using various methods
 //
-#include <iostream>
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/core/mat.hpp>
+#include "packageEtFunctions.h"
 
-#include "thresholdind.h"
+#include "iterativeBinarization.h"
 
 using namespace cv;
 

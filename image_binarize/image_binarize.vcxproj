@@ -147,7 +147,8 @@
     <ClCompile Include="image_binarize.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="thresholdind.h" />
+    <ClInclude Include="iterativeBinarization.h" />
+    <ClInclude Include="packageEtFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

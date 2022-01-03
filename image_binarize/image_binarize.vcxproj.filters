@@ -20,7 +20,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="thresholdind.h">
+    <ClInclude Include="packageEtFunctions.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="iterativeBinarization.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

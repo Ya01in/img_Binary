@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
+#include <math.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core/mat.hpp>
 
 #define maxIntensity 255
+#define Black 0
+#define White 255
 
 using namespace cv;
 
@@ -25,11 +28,21 @@ int* getHist(Mat& img)
 	return &hist[0];
 }
 
-Mat seg_interative(Mat& gray)
+//function for binarizing image using given thresholdValue.
+Mat binarize(Mat& img, int th_value)
 {
-	cv::Mat result;
-	int* hist = getHist(gray);
-	std::cout << hist[100];
+	Mat bied = img.clone();
+	int value = 0;
+	for (int i = 0; i < img.rows; i++)
+	{
+		for (int j = 0; j < img.cols; j++)
+		{
+			int intensity = (int)img.at<uchar>(i, j);
+			if (intensity >= th_value) value = White;
+			else value = Black;
+			bied.at<uchar>(i, j) = value;
+		}
+	}
 
-	return result;
+	return bied;
 }
