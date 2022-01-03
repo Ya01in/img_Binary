@@ -1,0 +1,6 @@
+
+*.json
+.vs/
+image_binarize/.vs/
+image_binarize/x64/
+
