@@ -4,6 +4,12 @@
 #include "packageEtFunctions.h"
 
 #include "iterativeBinarization.h"
+#include "interModesBinarization.h"
+#include "liBinarization.h"
+#include "meanBinarization.h"
+#include "minimumBinarization.h"
+#include "renyEntropyBinarization.h"
+#include "triangleBinarization.h"
 
 using namespace cv;
 
@@ -68,15 +74,16 @@ int main()
     {
     case 1:
         resultPath = "./seg_interative.jpg";
-        bied = seg_interative(gray);
+        bied = interative(gray);
         break;
         
     case 2:
         resultPath = "./seg_huang.jpg";
         break;
 
-    case 3:
+    case 3: //BUG
         resultPath = "./seg_interModes.jpg";
+        bied = interModes(gray);
         break;
 
     case 4:
@@ -85,6 +92,7 @@ int main()
 
     case 5:
         resultPath = "./seg_Li.jpg";
+        bied = li(gray);
         break;
 
     case 6:
@@ -93,14 +101,16 @@ int main()
 
     case 7:
         resultPath = "./seg_mean.jpg";
+        bied = meanSeg(gray);
         break;
 
     case 8:
         resultPath = "./seg_minError.jpg";
         break;
 
-    case 9:
+    case 9: //BUG
         resultPath = "./seg_minimum.jpg";
+        bied = mini(gray);
         break;
 
     case 10:
@@ -118,6 +128,7 @@ int main()
 
     case 13:
         resultPath = "./seg_renyEntropy.jpg";
+        bied = reny(gray);
         break;
 
     case 14:
@@ -126,6 +137,7 @@ int main()
 
     case 15:
         resultPath = "./seg_triangle.jpg";
+        bied = triangle(gray);
         break;
 
     case 16:
@@ -136,6 +148,11 @@ int main()
         return 0;
     }
     //show and ask to save
+    if (bied.empty())
+    {
+        std::cout << "ERROR: this method may not suit this image.\n";
+        return -1;
+    }
     const char* output = "result, press ENTER to save image or SPACEBAR to exit";
     cv::namedWindow(output, WINDOW_FULLSCREEN);
     cv::imshow(output, bied);

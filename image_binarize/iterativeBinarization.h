@@ -1,7 +1,7 @@
 #pragma once
 #include "packageEtFunctions.h"
 
-Mat seg_interative(Mat& gray)
+Mat interative(Mat& gray)
 {
 	cv::Mat output;
 	int* hist = getHist(gray);

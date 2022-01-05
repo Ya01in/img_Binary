@@ -25,7 +25,7 @@ int* getHist(Mat& img)
 		}
 	}
 	
-	return &hist[0];
+	return hist;
 }
 
 //function for binarizing image using given thresholdValue.
@@ -45,4 +45,27 @@ Mat binarize(Mat& img, int th_value)
 	}
 
 	return bied;
+}
+
+bool bimodalTest(double* histogram)
+{
+	int len = sizeof(histogram) / sizeof(histogram[0]);
+	int mode = 0;
+	for (int i = 1; i < len - 1; i++)
+	{
+		if (histogram[i - 1] < histogram[i] && histogram[i + 1] < histogram[i])
+		{
+			mode++;
+			if (mode > 2)
+			{
+				std::cout << "mode over 2\n";
+				return false;
+			}
+		}
+	}
+	if (mode == 2)
+	{
+		std::cout << "Bimodel\n";
+		return true;
+	}
 }

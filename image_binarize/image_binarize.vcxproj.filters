@@ -26,5 +26,23 @@
     <ClInclude Include="iterativeBinarization.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="interModesBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="liBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="meanBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="minimumBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="renyEntropyBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="triangleBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -147,8 +147,14 @@
     <ClCompile Include="image_binarize.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="interModesBinarization.h" />
     <ClInclude Include="iterativeBinarization.h" />
+    <ClInclude Include="liBinarization.h" />
+    <ClInclude Include="meanBinarization.h" />
+    <ClInclude Include="minimumBinarization.h" />
     <ClInclude Include="packageEtFunctions.h" />
+    <ClInclude Include="renyEntropyBinarization.h" />
+    <ClInclude Include="triangleBinarization.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
