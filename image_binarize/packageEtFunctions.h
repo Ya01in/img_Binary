@@ -49,23 +49,24 @@ Mat binarize(Mat& img, int th_value)
 
 bool bimodalTest(double* histogram)
 {
-	int len = sizeof(histogram) / sizeof(histogram[0]);
+	//int len = sizeof(histogram) / sizeof(histogram[0]);
 	int mode = 0;
-	for (int i = 1; i < len - 1; i++)
+	for (int i = 1; i <= maxIntensity; i++)
 	{
 		if (histogram[i - 1] < histogram[i] && histogram[i + 1] < histogram[i])
 		{
 			mode++;
 			if (mode > 2)
 			{
-				std::cout << "mode over 2\n";
+				//std::cout << "mode over 2\n";
+				std::cout << "number of mode: " << mode << std::endl;
 				return false;
 			}
 		}
 	}
 	if (mode == 2)
 	{
-		std::cout << "Bimodel\n";
+		std::cout << "Bimodel image created.\n";
 		return true;
 	}
 }

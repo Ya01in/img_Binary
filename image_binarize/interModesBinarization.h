@@ -43,5 +43,6 @@ Mat interModes(Mat& gray)
 
 
 	output = binarize(gray, thresholdValue);
+
 	return output;
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "packageEtFunctions.h"
 
-Mat interative(Mat& gray)
+Mat iterative(Mat& gray)
 {
 	cv::Mat output;
 	int* hist = getHist(gray);
@@ -38,7 +38,7 @@ Mat interative(Mat& gray)
 		//.showProgress(1.0);
 		level = (int)round(result);
 	}
-	std::cout << "level value:" << level << std::endl;
+	std::cout << "threshold value:" << level << std::endl;
 
 	output = binarize(gray, level);
 

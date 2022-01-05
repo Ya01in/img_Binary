@@ -44,5 +44,14 @@
     <ClInclude Include="triangleBinarization.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="mutipleBinarization.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="gateWay.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="segmentation.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
