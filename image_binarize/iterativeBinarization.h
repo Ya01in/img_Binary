@@ -38,7 +38,7 @@ Mat iterative(Mat& gray)
 		//.showProgress(1.0);
 		level = (int)round(result);
 	}
-	std::cout << "threshold value:" << level << std::endl;
+	//std::cout << "threshold value:" << level << std::endl;
 
 	output = binarize(gray, level);
 

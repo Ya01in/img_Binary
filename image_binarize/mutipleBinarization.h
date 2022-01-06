@@ -47,7 +47,7 @@ Mat Yen(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -121,7 +121,7 @@ Mat shanbhag(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -168,7 +168,7 @@ Mat percentile(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -221,7 +221,7 @@ Mat moments(Mat& gray)
 			break;
 		}
 	}
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -285,7 +285,7 @@ Mat minError(Mat& gray)
 	{
 		//Calculate some statistics.
 		mu = B(hist_use, threshold) / A(hist_use, threshold);
-		nu = (B(hist_use, 255) - B(hist_use, threshold)) / (A(hist_use, 2551) - A(hist_use, threshold));
+		nu = (B(hist_use, 255) - B(hist_use, threshold)) / (A(hist_use, 255) - A(hist_use, threshold));
 		p = A(hist_use, threshold) / A(hist_use, 255);
 		q = (A(hist_use, 255) - A(hist_use, threshold)) / A(hist_use, 255);
 		sigma2 = C(hist_use, threshold) / A(hist_use, threshold) - (mu * mu);
@@ -316,7 +316,7 @@ Mat minError(Mat& gray)
 			threshold = (int)floor(temp);
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -394,7 +394,7 @@ Mat maxEntropy(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 
@@ -453,7 +453,7 @@ Mat isoData(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << g << std::endl;
+	//std::cout << "threshold value:" << g << std::endl;
 
 	output = binarize(gray, g);
 
@@ -553,7 +553,7 @@ Mat huang(Mat& gray)
 		}
 	}
 
-	std::cout << "threshold value:" << threshold << std::endl;
+	//std::cout << "threshold value:" << threshold << std::endl;
 
 	output = binarize(gray, threshold);
 

@@ -1,15 +1,17 @@
 #pragma once
 #include "packageEtFunctions.h"
 #include "segmentation.h"
-
+#include <string>
+#include <iostream>
 int start()
 {
-    int adaptiveFlag = 0;//default is unadaptive
+    int adaptiveFlag = 0
+        ;//default is unadaptive
     cv::Mat src;        //image 
     cv::Mat gray;       //grayscaled image
     cv::Mat bied;       //binarized image
-    String image_path;  //image filepath
-    String resultPath;
+    string image_path;  //image filepath
+    string resultPath;
     int mode;
     //entrance interface
     std::cout << "================================\n";
@@ -64,11 +66,11 @@ int start()
     std::cout << "Adaptive or not? (y/n)\n";
     char ch = 'q';
     std::cin >> ch;
-    if (ch == 'y') 
+    if (ch == 'y')
     {
         adaptiveFlag = 1;
     }
-    else if (ch =='n')
+    else if (ch == 'n')
     {
         adaptiveFlag = 0;
     }
@@ -77,32 +79,41 @@ int start()
         std::cout << "ERROR: enter y or n only.\n";
         return 0;
     }
-    //===============================
+    //=============================== adaptive like method by processing each row.
     if (adaptiveFlag == 1)
     {
         cv::InputArrayOfArrays;
-        Mat subImgs[16];
-        int step = gray.rows / 16;
+        int layer = 3144;
+        Mat subImgs[3144];
+        vector<Mat> subImgs_push;
+        //Mat subImgs[3200];
+        int step = gray.rows / layer;
         std::cout << gray.cols << std::endl;
         std::cout << gray.rows << std::endl;
-        
-        for (int i = 0; i < 16; i++)
+
+        for (int i = 0; i < layer; i++)
         {
-            int upperCol = (step * (i + 1) - 1 < gray.rows) ? step * (i + 1) - 1: gray.rows;
-            cv::Rect sub( 0, i * step, gray.cols, step);
-            std::cout << "step " << i << " range: [" << 0 << " ," << i * step << " ," << gray.cols << " ," << step << "]" << endl;
+            //int upperCol = (step * (i + 1) - 1 < gray.rows) ? step * (i + 1) - 1 : gray.rows;
+            cv::Rect sub(0, i * step, gray.cols, step);
+            //  std::cout << "step " << i << " range: [" << 0 << " ," << i * step << " ," << gray.cols << " ," << step << "]" << endl;
 
             subImgs[i] = gray(sub);
             subImgs[i] = segmentation(subImgs[i], mode, &resultPath);
+            subImgs_push.push_back(subImgs[i]);
         }
-        for (int i = 16; i != 1 ; i/=2)
-        {
-            for (int j = 0; j < i; j+=2)
-            {
-                cv::vconcat(subImgs[j], subImgs[j + 1], subImgs[j/2]);
-            }
-        }
-        bied = subImgs[0];
+
+        /* for (int i = layer; i != 1 ; i/=2)
+         {
+             for (int j = 0; j < i; j+=2)
+             {
+                 cv::vconcat(subImgs[j], subImgs[j + 1], subImgs[j/2]);
+             }
+         }*/
+
+
+        cv::Mat result;
+        cv::vconcat(subImgs_push, result);
+        bied = result;
         resultPath += "_adaptive";
 
     }
