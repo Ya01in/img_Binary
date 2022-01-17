@@ -15,7 +15,7 @@ using namespace cv;
 //int* hist = getHist(gray);
 int* getHist(Mat& img) 
 {
-	int hist[maxIntensity+1] = { 0 };
+	int *hist = new int [maxIntensity+1](0);
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
