@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "packageEtFunctions.h"
+#include <limits>
 using namespace std;
 /*********************************************** Yen *****************************************************/
 
@@ -471,17 +472,15 @@ Mat huang(Mat& gray)
 	double min_ent; // min entropy 
 	double mu_x;
 	cv::Mat output;
-	int* hist_use = (int*)malloc(256 * sizeof(int));
 	int* hist = getHist(gray);
 	int num;
 	long tol = gray.rows * gray.cols;
-	for (num = 0; num < 256; num++) hist_use[num] = hist[num];
 
 	/* Determine the first non-zero bin */
 	first_bin = 0;
 	for (num = 0; num < 256; num++)
 	{
-		if (hist_use[num] != 0) {
+		if (hist[num] != 0) {
 			first_bin = num;
 			break;
 		}
@@ -491,7 +490,7 @@ Mat huang(Mat& gray)
 	last_bin = 255;
 	for (num = 255; num >= first_bin; num--)
 	{
-		if (hist_use[num] != 0)
+		if (hist[num] != 0)
 		{
 			last_bin = num;
 			break;
@@ -504,8 +503,8 @@ Mat huang(Mat& gray)
 	num_pix = 0;
 	for (num = first_bin; num < 256; num++)
 	{
-		sum_pix += num * hist_use[num];
-		num_pix += hist_use[num];
+		sum_pix += num * hist[num];
+		num_pix += hist[num];
 		/* NUM_PIX cannot be zero ! */
 		mu_0[num] = sum_pix / (double)num_pix;
 	}
@@ -515,14 +514,14 @@ Mat huang(Mat& gray)
 	num_pix = 0;
 	for (num = last_bin; num > 0; num--)
 	{
-		sum_pix += num * hist_use[num];
-		num_pix += hist_use[num];
+		sum_pix += num * hist[num];
+		num_pix += hist[num];
 		/* NUM_PIX cannot be zero ! */
 		mu_1[num - 1] = sum_pix / (double)num_pix;
 	}
 
 	/* Determine the threshold that minimizes the fuzzy entropy */
-	min_ent = 256.0;
+	min_ent = numeric_limits<double>::max();
 	for (it = 0; it < 256; it++)
 	{
 		ent = 0.0;
@@ -543,7 +542,6 @@ Mat huang(Mat& gray)
 				ent += hist_use[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
 		}
 
-		ent /= tol;
 		//cout << ent << "\n" << endl;
 		/* No need to divide by NUM_ROWS * NUM_COLS * LOG(2) ! */
 		if (ent < min_ent)
