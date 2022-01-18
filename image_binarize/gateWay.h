@@ -98,7 +98,7 @@ int start()
             //  std::cout << "step " << i << " range: [" << 0 << " ," << i * step << " ," << gray.cols << " ," << step << "]" << endl;
 
             subImgs[i] = gray(sub);
-            subImgs[i] = segmentation(subImgs[i], mode, &resultPath);
+            subImgs[i] = mySegmentation(subImgs[i], mode, &resultPath);
             subImgs_push.push_back(subImgs[i]);
         }
 
@@ -119,7 +119,7 @@ int start()
     }
     else
     {
-        bied = segmentation(gray, mode, &resultPath);
+        bied = mySegmentation(gray, mode, &resultPath);
         resultPath += "_normal";
     }
 

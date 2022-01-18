@@ -9,7 +9,7 @@
 #include "renyEntropyBinarization.h"
 #include "triangleBinarization.h"
 
-Mat segmentation(Mat& gray,int mode,String* resultPath)
+Mat mySegmentation(Mat& gray,int mode,String* resultPath)
 {
     cv::Mat bied;       //binarized image
 

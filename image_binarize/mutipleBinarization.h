@@ -531,7 +531,7 @@ Mat huang(Mat& gray)
 			mu_x = 1.0 / (1.0 + term * abs(num - mu_0[it]));
 
 			if (!((mu_x < 1e-06) || (mu_x > 0.999999))) /* Equation (6) & (8) in Ref. 1 */
-				ent += hist_use[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
+				ent += hist[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
 		}
 		//cout << mu_x << " " << ent << endl;
 		for (num = it + 1; num < 256; num++)
@@ -539,7 +539,7 @@ Mat huang(Mat& gray)
 			/* Equation (4) in Ref. 1 */
 			mu_x = 1.0 / (1.0 + term * abs(num - mu_1[it]));
 			if (!((mu_x < 1e-06) || (mu_x > 0.999999)))	/* Equation (6) & (8) in Ref. 1 */
-				ent += hist_use[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
+				ent += hist[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
 		}
 
 		//cout << ent << "\n" << endl;
@@ -558,4 +558,61 @@ Mat huang(Mat& gray)
 
 	return output;
 
+}
+
+/* reference : https://imagej.net/plugins/auto-threshold */
+Mat huang2(Mat& gray)
+{
+	int first, last; 	// first and last non-empty bin
+	int* hist = getHist(gray);
+
+	for (first = 0; first < 256 && !hist[first]; ++first)
+		; // do nothing
+	for (last = 255; last > first && !hist[last]; --last)
+		; // do nothing
+	if (first == last)
+		return binarize(gray, 0);
+
+	// calculate the cumulative density and the weighted cumulative density
+	double* S = new double[last + 1];
+	double* W = new double[last + 1];
+
+	S[0] = hist[0];
+	W[0] = 0;
+	for (int i = max(1, first); i <= last; i++)
+	{
+		S[i] = S[i - 1] + hist[i];
+		W[i] = W[i - 1] + i * hist[i];
+	}
+
+	// precalculate the summands of the entropy given the absolute difference x - mu (integral)
+	double C = last - first;
+	double* Smu = new double[last + 1 - first];
+	for (int i = 1; i < last + 1 - first; ++i)
+	{
+		double mu = 1 / (1 + i / C);
+		Smu[i] = -mu * log(mu) - (1 - mu) * log(1 - mu);
+	}
+
+	// calculate the threshold
+	int bestThreshold = 0;
+	double bestEntropy = std::numeric_limits<double>::max();
+	for (int threshold = first; threshold <= last; threshold++)
+	{
+		double entropy = 0;
+		int mu = (int)round(W[threshold] / S[threshold]);
+		for (int i = first; i <= threshold; ++i)
+			entropy += Smu[abs(i - mu)] * hist[i];
+
+		mu = (int)round((W[last] - W[threshold]) / (S[last] - S[threshold]));
+		for (int i = threshold + 1; i <= last; ++i)
+			entropy += Smu[abs(i - mu)] * hist[i];
+
+		if (bestEntropy > entropy)
+		{
+			bestEntropy = entropy;
+			bestThreshold = threshold;
+		}
+	}
+	return binarize(gray, bestThreshold);
 }
