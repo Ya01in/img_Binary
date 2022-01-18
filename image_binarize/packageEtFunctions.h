@@ -51,7 +51,7 @@ bool bimodalTest(double* histogram)
 {
 	//int len = sizeof(histogram) / sizeof(histogram[0]);
 	int mode = 0;
-	for (int i = 1; i <= maxIntensity; i++)
+	for (int i = 1; i < maxIntensity; i++)
 	{
 		if (histogram[i - 1] < histogram[i] && histogram[i + 1] < histogram[i])
 		{

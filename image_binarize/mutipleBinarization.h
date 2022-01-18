@@ -408,15 +408,13 @@ Mat isoData(Mat& gray)
 {
 	cv::Mat output;
 
-	int* hist_use = (int*)malloc(256 * sizeof(int));
 	int* hist = getHist(gray);
 	int num;
-	for (num = 0; num < 256; num++) hist_use[num] = hist[num];
 	int l, toth, totl, h, g = 0;
 	for (num = 1; num < 256; num++)
 	{
-		//cout << hist_use[num] << endl;
-		if (hist_use[num] > 0)
+		//cout << hist[num] << endl;
+		if (hist[num] > 0)
 		{
 			g = num + 1;
 			break;
@@ -429,15 +427,15 @@ Mat isoData(Mat& gray)
 		totl = 0;
 		for (num = 0; num < g; num++)
 		{
-			totl = totl + hist_use[num];
-			l = l + (hist_use[num] * num);
+			totl = totl + hist[num];
+			l = l + (hist[num] * num);
 		}
 		h = 0;
 		toth = 0;
 		for (num = g + 1; num < 256; num++)
 		{
-			toth += hist_use[num];
-			h += (hist_use[num] * num);
+			toth += hist[num];
+			h += (hist[num] * num);
 		}
 		if (totl > 0 && toth > 0)
 		{
