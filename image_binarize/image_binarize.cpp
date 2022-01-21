@@ -11,7 +11,7 @@ int main()
     bool flag = true;
     char a;
     int o;
-    while (flag = true)
+    while (flag == true)
     {
         o = start();
         std::cout << "Enter q to exit or Other to process another image:\n";

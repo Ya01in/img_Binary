@@ -15,7 +15,7 @@ using namespace cv;
 //int* hist = getHist(gray);
 int* getHist(Mat& img) 
 {
-	int hist[maxIntensity+1] = { 0 };
+	int *hist = new int [maxIntensity+1]();
 	for (int i = 0; i < img.rows; i++)
 	{
 		for (int j = 0; j < img.cols; j++)
@@ -51,7 +51,7 @@ bool bimodalTest(double* histogram)
 {
 	//int len = sizeof(histogram) / sizeof(histogram[0]);
 	int mode = 0;
-	for (int i = 1; i <= maxIntensity; i++)
+	for (int i = 1; i < maxIntensity; i++)
 	{
 		if (histogram[i - 1] < histogram[i] && histogram[i + 1] < histogram[i])
 		{

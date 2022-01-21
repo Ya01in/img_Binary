@@ -9,13 +9,13 @@ Mat interModes(Mat& gray)
 	int thresholdValue = 999;
 	double iHisto[maxIntensity+1];
 	int iter = 0;
-	for (int i = 0; i < maxIntensity; i++)
+	for (int i = 0; i <= maxIntensity; i++)
 		iHisto[i] = (double)hist[i];
 
 	while (!bimodalTest(iHisto)) {
 		//smooth with a 3 point running mean filter
 		double previous = 0, current = 0, next = iHisto[0];
-		for (int i = 0; i < maxIntensity - 1; i++) {
+		for (int i = 0; i < maxIntensity; i++) {
 			previous = current;
 			current = next;
 			next = iHisto[i + 1];
@@ -34,7 +34,7 @@ Mat interModes(Mat& gray)
 
 	// The threshold is the mean between the two peaks.
 	int tt = 0;
-	for (int i = 1; i < maxIntensity - 1; i++) {
+	for (int i = 1; i < maxIntensity; i++) {
 		if (iHisto[i - 1] < iHisto[i] && iHisto[i + 1] < iHisto[i]) {
 			tt += i;
 		}

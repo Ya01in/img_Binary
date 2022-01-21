@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "packageEtFunctions.h"
+#include <limits>
 using namespace std;
 /*********************************************** Yen *****************************************************/
 
@@ -407,15 +408,13 @@ Mat isoData(Mat& gray)
 {
 	cv::Mat output;
 
-	int* hist_use = (int*)malloc(256 * sizeof(int));
 	int* hist = getHist(gray);
 	int num;
-	for (num = 0; num < 256; num++) hist_use[num] = hist[num];
 	int l, toth, totl, h, g = 0;
 	for (num = 1; num < 256; num++)
 	{
-		//cout << hist_use[num] << endl;
-		if (hist_use[num] > 0)
+		//cout << hist[num] << endl;
+		if (hist[num] > 0)
 		{
 			g = num + 1;
 			break;
@@ -428,15 +427,15 @@ Mat isoData(Mat& gray)
 		totl = 0;
 		for (num = 0; num < g; num++)
 		{
-			totl = totl + hist_use[num];
-			l = l + (hist_use[num] * num);
+			totl = totl + hist[num];
+			l = l + (hist[num] * num);
 		}
 		h = 0;
 		toth = 0;
 		for (num = g + 1; num < 256; num++)
 		{
-			toth += hist_use[num];
-			h += (hist_use[num] * num);
+			toth += hist[num];
+			h += (hist[num] * num);
 		}
 		if (totl > 0 && toth > 0)
 		{
@@ -471,17 +470,15 @@ Mat huang(Mat& gray)
 	double min_ent; // min entropy 
 	double mu_x;
 	cv::Mat output;
-	int* hist_use = (int*)malloc(256 * sizeof(int));
 	int* hist = getHist(gray);
 	int num;
 	long tol = gray.rows * gray.cols;
-	for (num = 0; num < 256; num++) hist_use[num] = hist[num];
 
 	/* Determine the first non-zero bin */
 	first_bin = 0;
 	for (num = 0; num < 256; num++)
 	{
-		if (hist_use[num] != 0) {
+		if (hist[num] != 0) {
 			first_bin = num;
 			break;
 		}
@@ -491,7 +488,7 @@ Mat huang(Mat& gray)
 	last_bin = 255;
 	for (num = 255; num >= first_bin; num--)
 	{
-		if (hist_use[num] != 0)
+		if (hist[num] != 0)
 		{
 			last_bin = num;
 			break;
@@ -504,8 +501,8 @@ Mat huang(Mat& gray)
 	num_pix = 0;
 	for (num = first_bin; num < 256; num++)
 	{
-		sum_pix += num * hist_use[num];
-		num_pix += hist_use[num];
+		sum_pix += num * hist[num];
+		num_pix += hist[num];
 		/* NUM_PIX cannot be zero ! */
 		mu_0[num] = sum_pix / (double)num_pix;
 	}
@@ -515,14 +512,14 @@ Mat huang(Mat& gray)
 	num_pix = 0;
 	for (num = last_bin; num > 0; num--)
 	{
-		sum_pix += num * hist_use[num];
-		num_pix += hist_use[num];
+		sum_pix += num * hist[num];
+		num_pix += hist[num];
 		/* NUM_PIX cannot be zero ! */
 		mu_1[num - 1] = sum_pix / (double)num_pix;
 	}
 
 	/* Determine the threshold that minimizes the fuzzy entropy */
-	min_ent = 256.0;
+	min_ent = numeric_limits<double>::max();
 	for (it = 0; it < 256; it++)
 	{
 		ent = 0.0;
@@ -532,7 +529,7 @@ Mat huang(Mat& gray)
 			mu_x = 1.0 / (1.0 + term * abs(num - mu_0[it]));
 
 			if (!((mu_x < 1e-06) || (mu_x > 0.999999))) /* Equation (6) & (8) in Ref. 1 */
-				ent += hist_use[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
+				ent += hist[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
 		}
 		//cout << mu_x << " " << ent << endl;
 		for (num = it + 1; num < 256; num++)
@@ -540,10 +537,9 @@ Mat huang(Mat& gray)
 			/* Equation (4) in Ref. 1 */
 			mu_x = 1.0 / (1.0 + term * abs(num - mu_1[it]));
 			if (!((mu_x < 1e-06) || (mu_x > 0.999999)))	/* Equation (6) & (8) in Ref. 1 */
-				ent += hist_use[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
+				ent += hist[num] * (-mu_x * log(mu_x) - (1.0 - mu_x) * log(1.0 - mu_x));
 		}
 
-		ent /= tol;
 		//cout << ent << "\n" << endl;
 		/* No need to divide by NUM_ROWS * NUM_COLS * LOG(2) ! */
 		if (ent < min_ent)
@@ -560,4 +556,61 @@ Mat huang(Mat& gray)
 
 	return output;
 
+}
+
+/* reference : https://imagej.net/plugins/auto-threshold */
+Mat huang2(Mat& gray)
+{
+	int first, last; 	// first and last non-empty bin
+	int* hist = getHist(gray);
+
+	for (first = 0; first < 256 && !hist[first]; ++first)
+		; // do nothing
+	for (last = 255; last > first && !hist[last]; --last)
+		; // do nothing
+	if (first == last)
+		return binarize(gray, 0);
+
+	// calculate the cumulative density and the weighted cumulative density
+	double* S = new double[last + 1];
+	double* W = new double[last + 1];
+
+	S[0] = hist[0];
+	W[0] = 0;
+	for (int i = max(1, first); i <= last; i++)
+	{
+		S[i] = S[i - 1] + hist[i];
+		W[i] = W[i - 1] + i * hist[i];
+	}
+
+	// precalculate the summands of the entropy given the absolute difference x - mu (integral)
+	double C = last - first;
+	double* Smu = new double[last + 1 - first];
+	for (int i = 1; i < last + 1 - first; ++i)
+	{
+		double mu = 1 / (1 + i / C);
+		Smu[i] = -mu * log(mu) - (1 - mu) * log(1 - mu);
+	}
+
+	// calculate the threshold
+	int bestThreshold = 0;
+	double bestEntropy = std::numeric_limits<double>::max();
+	for (int threshold = first; threshold <= last; threshold++)
+	{
+		double entropy = 0;
+		int mu = (int)round(W[threshold] / S[threshold]);
+		for (int i = first; i <= threshold; ++i)
+			entropy += Smu[abs(i - mu)] * hist[i];
+
+		mu = (int)round((W[last] - W[threshold]) / (S[last] - S[threshold]));
+		for (int i = threshold + 1; i <= last; ++i)
+			entropy += Smu[abs(i - mu)] * hist[i];
+
+		if (bestEntropy > entropy)
+		{
+			bestEntropy = entropy;
+			bestThreshold = threshold;
+		}
+	}
+	return binarize(gray, bestThreshold);
 }
