@@ -1,4 +1,3 @@
-#pragma once
 #include "packageEtFunctions.h"
 
 Mat triangle(Mat& gray)
@@ -31,7 +30,7 @@ Mat triangle(Mat& gray)
 	}
 	if (min2 < maxIntensity) min2++; // line to the (p==0) point, not to data[min]
 
-	for (int i = 0; i < maxIntensity+1; i++) {
+	for (int i = 0; i < maxIntensity + 1; i++) {
 		if (hist[i] > dmax) {
 			max = i;
 			dmax = hist[i];
@@ -61,7 +60,7 @@ Mat triangle(Mat& gray)
 
 	if (min == max) {
 		//IJ.log("Triangle:  min == max.");
-		thresholdValue =  min;
+		thresholdValue = min;
 		output = binarize(gray, thresholdValue);
 		return output;
 
